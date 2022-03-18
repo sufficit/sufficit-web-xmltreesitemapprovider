@@ -22,7 +22,7 @@ jobs:
       
     - name: Build
       working-directory: ./src
-      run: dotnet build --configuration Release --no-restore
+      run: dotnet build --configuration Release
       
     - name: Deploy Package 
       working-directory: ./src
