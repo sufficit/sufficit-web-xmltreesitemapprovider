@@ -57,7 +57,7 @@ namespace Sufficit.Web
         {
             foreach (var item in cache)
             {
-                cache.Remove(item.Key, CacheEntryRemovedReason.Removed);
+                cache.Remove(item.Key);
             }
         }
 

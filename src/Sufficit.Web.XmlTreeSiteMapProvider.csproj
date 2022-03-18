@@ -1,28 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="Current">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <AssemblyName>SufficitWebXmlTreeSiteMapProvider</AssemblyName>
-    <TargetFrameworkProfile />
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <OutputType>Library</OutputType>
-    <ProjectGuid>{CAC68946-0F48-448B-BEF3-6911DF08C08A}</ProjectGuid>
-  </PropertyGroup>
-  <PropertyGroup>
+<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
+  
+  <PropertyGroup Label="Sufficit Targeting">
+    <TargetFramework>net4.6.1</TargetFramework>
+    <Configurations>Release</Configurations>
     <RootNamespace>Sufficit.Web</RootNamespace>
+    <LangVersion>8.0</LangVersion>
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
+	<SkipFunctionsDepsCopy>true</SkipFunctionsDepsCopy>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <DocumentationFile>
-    </DocumentationFile>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-  </PropertyGroup>
-  <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SiteMapNodeCollectionCache.cs" />
-    <Compile Include="TreeXmlSiteMapProvider.cs" />
-  </ItemGroup>
+  
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -31,27 +18,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Logging">
-      <Version>6.0.0</Version>
-    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="6.0.0" />
   </ItemGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+  
+  <PropertyGroup Label="Sufficit Pacote NUGET">
+    <Name>Sufficit.Web.XmlTreeSiteMapProvider</Name>
+    <PackageId>Sufficit.Web.XmlTreeSiteMapProvider</PackageId>
+    <PackageDescription></PackageDescription>
+    <RepositoryUrl>https://github.com/sufficit/sufficit-web-xmltreesitemapprovider</RepositoryUrl>
+	  <PackageProjectUrl>https://github.com/sufficit/sufficit-web-xmltreesitemapprovider</PackageProjectUrl>
+	  <PackageIconUrl>https://raw.githubusercontent.com/sufficit/sufficit-web-xmltreesitemapprovider/main/icon.ico</PackageIconUrl>
+	  <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+
+	  <PackageLicenseFile>license</PackageLicenseFile>
+	  <PackageReadmeFile>readme.md</PackageReadmeFile>
+	  <PackageIcon>icon.png</PackageIcon>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup Label="Sufficit Pacote NUGET Itens">
+		<None Include="../icon.png">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="../license">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+		<None Include="../readme.md">
+			<Pack>True</Pack>
+			<PackagePath></PackagePath>
+		</None>
+	</ItemGroup>
 </Project>
