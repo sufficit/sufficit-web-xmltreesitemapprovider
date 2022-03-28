@@ -33,6 +33,13 @@ namespace Sufficit.Web
             _logger.LogDebug("logging system initialized, dependency injection");                        
         }
 
+        public void ClearCache(HttpContext context)
+        {
+            if (_cache != null)
+            {
+                _cache.Clear(context);
+            }
+        }
 
         #region CHANGING MONITOR
 
@@ -131,6 +138,7 @@ namespace Sufficit.Web
 
                     // Backuping generated file
                     _mapadosite.Save(System.AppDomain.CurrentDomain.BaseDirectory + "Web.sitemap.debug");
+
                 return true;
             }
 
@@ -422,9 +430,6 @@ namespace Sufficit.Web
             return CreateNodeFromXml(node);
         }
 
-        #endregion
-
-        
+        #endregion        
     }
-
 }

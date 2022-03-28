@@ -61,9 +61,36 @@ namespace Sufficit.Web
             }
         }
 
-        private string GetKey(HttpContext context, SiteMapNode node)
+        public void Clear(HttpContext context)
         {
-            return context.Session.SessionID + "//" + node.Key;
+            var prefix = GetPrefix(context);
+            foreach (var item in cache)
+            {   
+                if(item.Key.StartsWith(prefix))
+                    cache.Remove(item.Key);
+            }
+        }
+
+        private string GetKey(HttpContext context, SiteMapNode node) =>          
+            GetPrefix(context) + "//" + node.Key;
+
+
+        /// <summary>
+        /// Important to know when refresh individual cache
+        /// If user id or name changes, use another indexes
+        /// </summary>
+        /// <param name="context"></param>
+        /// <returns></returns>
+        private string GetPrefix(HttpContext context)
+        {            
+            string prefix = string.Empty;
+            if (context?.Session != null)
+                prefix += "//" + context.Session.SessionID;
+
+            if (context?.User?.Identity != null)
+                prefix += "//" + context.User.Identity.Name;
+
+            return prefix;
         }
     }
 }
