@@ -33,13 +33,7 @@ namespace Sufficit.Web
             _logger.LogDebug("logging system initialized, dependency injection");                        
         }
 
-        public void ClearCache(HttpContext context)
-        {
-            if (_cache != null)
-            {
-                _cache.Clear(context);
-            }
-        }
+        public void ClearCache(HttpContext context) => _cache.Clear(context);
 
         #region CHANGING MONITOR
 
