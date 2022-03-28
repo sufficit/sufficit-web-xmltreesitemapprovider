@@ -256,15 +256,22 @@ namespace Sufficit.Web
             if (node != null)
             {
                 string id, url, titulo, descricao; id = url = titulo = descricao = string.Empty;
-                string[] roles = null;
+                var roles = new HashSet<string>();
 
                 if (node.Attributes["id"] != null) { id = node.Attributes["id"].Value; }
                 if (node.Attributes["url"] != null) { url = node.Attributes["url"].Value; }
                 if (node.Attributes["title"] != null) { titulo = node.Attributes["title"].Value; }
                 if (node.Attributes["description"] != null) { descricao = node.Attributes["description"].Value; }
-                if (node.Attributes["roles"] != null) roles = node.Attributes["roles"].Value.Split(new char[] { ';', ',' });
+                if (node.Attributes["roles"] != null)
+                {
+                    foreach (var role in node.Attributes["roles"].Value.Split(new char[] { ';', ',' }))
+                    {
+                        if (!string.IsNullOrWhiteSpace(role))
+                            roles.Add(role.Trim().ToLowerInvariant());
+                    }
+                }
 
-                return new SiteMapNode(this, id, url, titulo, descricao, roles, null, null, null);
+                return new SiteMapNode(this, id, url, titulo, descricao, roles.ToArray(), null, null, null);
             }
 
             return null;
