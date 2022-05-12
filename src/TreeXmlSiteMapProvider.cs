@@ -212,16 +212,27 @@ namespace Sufficit.Web
 
         #region PUBLIC OVERRIDE VOID INITIALIZE ( STRING, NAMEVALUECOLLECTION )
 
+        protected NameValueCollection LoweringKeys(NameValueCollection attributes)
+        {
+            NameValueCollection result = new NameValueCollection();
+            foreach(var key in attributes.AllKeys)
+            {
+                result.Add(key.ToLowerInvariant().Trim(), attributes[key]);
+            }
+            return result;
+        }
+
         public override void Initialize(string name, NameValueCollection attributes)
         {
+            var atts = LoweringKeys(attributes);
             #region INICIALIZANDO ATRIBUTOS
 
-            var debugAtt = attributes["Debug"];
+            var debugAtt = atts["debug"];
             if (debugAtt != null)            
                 _debug = bool.Parse(debugAtt.ToString());
 
             // Default document to trim of end url
-            var defaultDocument = attributes["Default"];
+            var defaultDocument = atts["default"];
             if (!string.IsNullOrWhiteSpace(defaultDocument))
             {
                 if (defaultDocument.Contains('.'))
@@ -239,9 +250,9 @@ namespace Sufficit.Web
             #region FONTE DE DADOS
 
             var sitemaps = new List<string>();
-            if (!string.IsNullOrWhiteSpace(attributes["mapsList"]))
+            if (!string.IsNullOrWhiteSpace(atts["mapslist"]))
             {
-                sitemaps.AddRange(attributes["mapsList"].Split(new char[] { ';', ',' }));
+                sitemaps.AddRange(atts["mapslist"].Split(new char[] { ';', ',' }));
             }
 
             _absolutePaths.Clear();
@@ -313,7 +324,7 @@ namespace Sufficit.Web
                 urlToLower = urlToLower.TrimEnd('/');
                 depuracao += "removendo / do fim da url ;";
             }
-            else if (_defaultDocument != null && urlToLower.EndsWith($"/{ _defaultDocument }"))
+            else if (!string.IsNullOrWhiteSpace(_defaultDocument) && urlToLower.EndsWith($"/{ _defaultDocument }"))
             {
                 urlToLower = urlToLower.Substring(urlToLower.Length - (_defaultDocument.Length +1));
                 depuracao += "removendo /default do fim da url ;";
