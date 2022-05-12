@@ -23,6 +23,7 @@ namespace Sufficit.Web
         protected NameValueCollection atributos;
         private XmlDocument _mapadosite;
         private bool _debug;
+        private string? _defaultDocument;
 
         public XmlTreeSiteMapProvider(ILogger<XmlTreeSiteMapProvider> logger)
         {
@@ -218,7 +219,17 @@ namespace Sufficit.Web
             var debugAtt = attributes["Debug"];
             if (debugAtt != null)            
                 _debug = bool.Parse(debugAtt.ToString());
-            
+
+            // Default document to trim of end url
+            var defaultDocument = attributes["Default"];
+            if (!string.IsNullOrWhiteSpace(defaultDocument))
+            {
+                if (defaultDocument.Contains('.'))
+                    defaultDocument = defaultDocument.Split('.')[0];
+
+                _defaultDocument = defaultDocument;
+            }
+
             #endregion
 
             titulo = name;
@@ -296,6 +307,18 @@ namespace Sufficit.Web
                 urlToLower = urlToLower.Split('#')[0];
                 depuracao += "removendo itens da url após # ;";
             }
+                
+            if (urlToLower.EndsWith("/"))
+            {
+                urlToLower = urlToLower.TrimEnd('/');
+                depuracao += "removendo / do fim da url ;";
+            }
+            else if (_defaultDocument != null && urlToLower.EndsWith($"/{ _defaultDocument }"))
+            {
+                urlToLower = urlToLower.Substring(urlToLower.Length - (_defaultDocument.Length +1));
+                depuracao += "removendo /default do fim da url ;";
+            }            
+
             SiteMapNode sitenode = null;
 
             XmlNodeList nodes = _mapadosite.SelectNodes("//*[contains(@url, '" + urlToLower + "')]");
