@@ -23,7 +23,7 @@ namespace Sufficit.Web
         protected NameValueCollection _attributes;
         private XmlDocument _mapadosite;
         private bool _debug;
-        private string? _defaultDocument;
+        private string _defaultDocument;
 
         public XmlTreeSiteMapProvider(ILogger<XmlTreeSiteMapProvider> logger)
         {
@@ -183,6 +183,13 @@ namespace Sufficit.Web
                     {
                         string stringURL = ell.GetAttribute("url");
                         if (!string.IsNullOrWhiteSpace(stringURL)) ell.SetAttribute("url", stringURL.ToLowerInvariant());
+                        else ell.RemoveAttribute("url"); // cleanup empty url
+
+                        // cleanup empty description
+                        string stringDescription = ell.GetAttribute("description");
+                        if (string.IsNullOrWhiteSpace(stringDescription))
+                            ell.RemoveAttribute("description");
+
                         ell.SetAttribute("id", _contador.ToString());
                         _contador++;
                     }
@@ -308,32 +315,37 @@ namespace Sufficit.Web
         {
             string depuracao = string.Empty;
             string urlToLower = rawUrl.ToLowerInvariant();
+
             if (urlToLower.Contains('?'))
             {
                 urlToLower = urlToLower.Split('?')[0];
-                depuracao += "removendo itens da url após ? ;";
+                depuracao += "removendo itens da url após ?; ";
             }
+
             if (urlToLower.Contains('#'))
             {
                 urlToLower = urlToLower.Split('#')[0];
-                depuracao += "removendo itens da url após # ;";
-            }
-                
+                depuracao += "removendo itens da url após #; ";
+            }                
+            
             if (urlToLower.EndsWith("/"))
             {
-                urlToLower = urlToLower.Substring(urlToLower.Length - 1);
-                depuracao += "removendo / do fim da url ;";
+                urlToLower = urlToLower.Substring(0, urlToLower.Length - 1);
+                depuracao += "removendo / do fim da url; ";
             }
             else if (!string.IsNullOrWhiteSpace(_defaultDocument) && urlToLower.EndsWith($"/{ _defaultDocument }"))
             {
-                urlToLower = urlToLower.Substring(urlToLower.Length - (_defaultDocument.Length +1));
-                depuracao += "removendo /default do fim da url ;";
+                urlToLower = urlToLower.Substring(0, urlToLower.Length - (_defaultDocument.Length +1));
+                depuracao += "removendo /default do fim da url; ";
             }            
-
+            
             SiteMapNode sitenode = null;
 
             XmlNodeList nodes = _mapadosite.SelectNodes("//*[contains(@url, '" + urlToLower + "')]");
-            depuracao += nodes.Count + " nodes encontrados;";
+            depuracao += nodes.Count + " nodes encontrados; ";
+
+            _logger.LogTrace($"FindSiteMapNode: raw: {rawUrl} :: filtred: {urlToLower} :: debug: {depuracao}");
+
             foreach (XmlNode node in nodes)
             {
                 //depuracao += "PATH URL: " + Path.GetFullPath(urlToLower) + " ;;; PATH NODE: " + Path.GetFullPath(node.Attributes["url"].Value);            
@@ -343,8 +355,6 @@ namespace Sufficit.Web
                     break;
                 }
             }
-
-            _logger.LogTrace($"FindSiteMapNode: {urlToLower + " :: " + depuracao}");
             return sitenode;
         }
 

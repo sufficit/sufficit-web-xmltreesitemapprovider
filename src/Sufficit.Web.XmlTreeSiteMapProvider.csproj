@@ -2,10 +2,10 @@
 <Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
   
   <PropertyGroup Label="Sufficit Targeting">
-    <TargetFramework>net4.6.1</TargetFramework>
+	<TargetFramework>net4.6.1</TargetFramework>
     <Configurations>Release</Configurations>
     <RootNamespace>Sufficit.Web</RootNamespace>
-    <LangVersion>8.0</LangVersion>
+	<LangVersion>8.0</LangVersion>
     <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild>
 	<SkipFunctionsDepsCopy>true</SkipFunctionsDepsCopy>
   </PropertyGroup>
