@@ -20,7 +20,7 @@ namespace Sufficit.Web
         private readonly List<string> _absolutePaths;
 
         protected string titulo;
-        protected NameValueCollection atributos;
+        protected NameValueCollection _attributes;
         private XmlDocument _mapadosite;
         private bool _debug;
         private string? _defaultDocument;
@@ -92,7 +92,7 @@ namespace Sufficit.Web
                 // Specify what is done when a file is changed, created, or deleted.
                 _logger.LogInformation($"({writeTime.ToLongTimeString()}) file changed, path: { e.FullPath }, change type: { e.ChangeType }");
 
-                if(Generate(atributos, cts.Token))
+                if(Generate(_attributes, cts.Token))
                     _changeCounter = 0;
             });
         }
@@ -224,7 +224,8 @@ namespace Sufficit.Web
 
         public override void Initialize(string name, NameValueCollection attributes)
         {
-            var atts = LoweringKeys(attributes);
+            _attributes = attributes;
+            var atts = LoweringKeys(_attributes);
             #region INICIALIZANDO ATRIBUTOS
 
             var debugAtt = atts["debug"];
@@ -244,8 +245,7 @@ namespace Sufficit.Web
             #endregion
 
             titulo = name;
-            atributos = attributes;
-            base.Initialize(name, attributes);
+            base.Initialize(name, _attributes);
 
             #region FONTE DE DADOS
 
@@ -268,7 +268,7 @@ namespace Sufficit.Web
 
             #endregion
 
-            Generate(attributes);
+            Generate(_attributes);
         }
 
         #endregion
@@ -321,7 +321,7 @@ namespace Sufficit.Web
                 
             if (urlToLower.EndsWith("/"))
             {
-                urlToLower = urlToLower.TrimEnd('/');
+                urlToLower = urlToLower.Substring(urlToLower.Length - 1);
                 depuracao += "removendo / do fim da url ;";
             }
             else if (!string.IsNullOrWhiteSpace(_defaultDocument) && urlToLower.EndsWith($"/{ _defaultDocument }"))
