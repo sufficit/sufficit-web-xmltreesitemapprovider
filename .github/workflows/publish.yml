@@ -14,7 +14,9 @@ jobs:
   # passo NuGet/login falha com HTTP 401 - e esse exatamente o sinal buscado.
   verify-auth:
     if: github.event_name == 'workflow_dispatch'
-    runs-on: [windows-2019]
+    # Sonda nao compila nada (so troca token OIDC): roda em runner hosted
+    # Linux. O job publish segue no windows-2019 original.
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
       contents: read
